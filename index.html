@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Legal Writing Lab | Law Matters Online Academy</title>
+<style>
+  :root{
+    --bg:#0b111f; --panel:#101a33; --ink:#eaf1ff; --muted:#9fb0c9; --line:#1e2c4a;
+    --chip:#0f1a33; --accent:#7fb3ff; --ok:#2ecc71; --warn:#ffd166; --bad:#ff6b6b;
+    --hl-passive:#fff1a6; --hl-nom:#c7d8ff; --hl-jargon:#ffc7c7;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1000px 700px at 18% -10%,#172449 0%,#0b111f 60%);color:var(--ink);
+       font-family:Inter, ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif}
+  header{max-width:1200px;margin:0 auto;padding:16px 16px 8px}
+  h1{margin:0 0 6px;font-size:clamp(22px,3.5vw,28px)}
+  .sub{color:var(--muted);margin:0 0 12px}
+  .modes{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .mode{appearance:none;border:1px solid #253a64;background:#0f1730;color:#cfe1ff;
+        padding:8px 12px;border-radius:12px;cursor:pointer;font-weight:600}
+  .mode.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(127,179,255,.2)}
+  .toggle-all{margin-left:auto}
+  .container{max-width:1200px;margin:0 auto;padding:8px 16px 24px;display:grid;gap:14px}
+  .cols{display:grid;grid-template-columns:1fr;gap:14px}
+  @media(min-width:1200px){.cols{grid-template-columns:1.4fr .9fr}}
+  .card{background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+        border:1px solid var(--line); border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .panel{padding:14px}
+  .panel h2{margin:2px 0 10px;font-size:16px;color:#d7e6ff;display:flex;align-items:center;gap:8px}
+  .panel h3{margin:10px 0 6px;font-size:13px;color:#d7e6ff}
+  .block{display:grid;gap:6px}
+  .block label{font-size:12px;color:#bfd0f3}
+  textarea,input[type=text]{width:100%;background:#0c1428;color:#e6f0ff;border:1px solid #223456;border-radius:12px;padding:10px 12px}
+  .grid{display:grid;gap:10px}
+  .two{grid-template-columns:1fr}
+  @media(min-width:720px){.two{grid-template-columns:1fr 1fr}}
+  .btn{appearance:none;border:1px solid #29406e;background:#0d1832;color:#dbe7ff;padding:8px 12px;border-radius:12px;cursor:pointer;font-weight:600}
+  .btn.ghost{background:transparent}
+  .hint{color:var(--muted);font-size:12px}
+  .pill{background:var(--chip);border:1px solid #24385f;color:#cfe1ff;padding:6px 10px;border-radius:999px;font-size:12px}
+  .metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  @media(min-width:900px){.metrics{grid-template-columns:repeat(4,1fr)}}
+  .kpi{padding:10px;border-radius:12px;background:linear-gradient(180deg,#0f1930,#0b1224);border:1px solid #1f2b47}
+  .kpi h4{margin:0 0 6px;font-size:12px;color:#aab9d6}
+  .kpi .big{font-size:22px;font-weight:700}
+  .bar{height:8px;border-radius:999px;background:#1a2540;overflow:hidden;border:1px solid #243356}
+  .bar>i{display:block;height:100%;background:linear-gradient(90deg,#5b86ff,#8ec5ff)}
+  .tagbar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+  .tag{display:inline-block;background:#132246;border:1px solid #2a3e68;color:#cfe1ff;border-radius:10px;padding:4px 8px;font-size:12px}
+  .library{max-height:60vh;overflow:auto;padding-right:6px}
+  .lib-item{border:1px solid #203055;background:#0f1a33;border-radius:12px;padding:10px;margin-bottom:8px}
+  .lib-item .title{font-weight:700;margin-bottom:2px}
+  .lib-item .meta{color:#b5c7ea;font-size:12px;margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
+  .lib-item .meta .pill{padding:4px 8px}
+  .section{display:none}
+  .section.visible{display:block}
+  .popover{border:1px solid #2a3e68;background:#0d1630;border-radius:12px;padding:10px}
+  .small{font-size:12px}
+  .badge{border:1px solid #2a3e68;border-radius:8px;padding:2px 6px;font-size:11px;background:#0d1730;color:#cfe1ff}
+  .ok{color:var(--ok)} .warn{color:var(--warn)} .bad{color:var(--bad)}
+  /* Preview highlighting */
+  .preview{min-height:180px;background:#0c1428;border:1px solid #223456;border-radius:12px;padding:10px 12px;white-space:pre-wrap}
+  .hl-passive{background:var(--hl-passive)}
+  .hl-nom{background:var(--hl-nom)}
+  .hl-jargon{background:var(--hl-jargon)}
+  .tooltip{position:relative;cursor:help}
+  .tooltip[data-tip]:hover:after{
+    content:attr(data-tip);position:absolute;left:0;top:100%;transform:translateY(6px);
+    white-space:pre-wrap;background:#0e1a34;border:1px solid #29406e;color:#dfeaff;padding:6px 8px;border-radius:8px;z-index:10;width:280px
+  }
+  /* Mini chart */
+  .chart{display:flex;gap:6px;align-items:flex-end;height:120px;margin-top:8px}
+  .barv{width:24px;background:linear-gradient(180deg,#7fb3ff,#a4d1ff);border:1px solid #284879;border-radius:6px}
+  .label{font-size:11px;text-align:center;margin-top:4px;color:#bfd0f3}
+  /* print */
+  @media print{
+    .modes, .tagbar, .toggle-all, .btn, select, input, textarea{display:none!important}
+    .card{box-shadow:none;border:1px solid #999}
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Legal Writing Lab</h1>
+    <p class="sub">Pick a level for a calmer view, or click on 'show all'.</p>
+    <div class="modes">
+      <button class="mode active" data-mode="beginner">Beginner</button>
+      <button class="mode" data-mode="intermediate">Intermediate</button>
+      <button class="mode" data-mode="advanced">Advanced</button>
+      <button class="mode" data-mode="expert">Expert or Scholarship</button>
+      <span class="toggle-all">
+        <button id="showAll" class="mode">Show all</button>
+        <button id="showSources" class="mode">Literature</button>
+      </span>
+    </div>
+  </header>
+
+  <main class="container cols">
+
+    <!-- LEFT: Workspace -->
+    <section class="card">
+      <div class="panel">
+        <h2>Workspace</h2>
+        <div class="grid two" style="margin-top:6px">
+          <div class="block">
+            <label for="editor">Draft</label>
+            <textarea id="editor" rows="12" placeholder="Paste or write your legal text here."></textarea>
+            <div class="row" style="margin-top:6px;gap:8px">
+              <button id="savePDF" class="btn">Save as PDF</button>
+              <button id="shareBtn" class="btn ghost">Share</button>
+              <span class="hint" id="shareNote"></span>
+            </div>
+          </div>
+          <div class="block">
+            <label for="clause">Clause or statutory text</label>
+            <textarea id="clause" rows="6" placeholder="Optional: paste a clause for canons or mapping."></textarea>
+            <label for="facts" style="margin-top:6px">Fact pattern</label>
+            <textarea id="facts" rows="5" placeholder="Optional: short fact pattern for narrative or advocacy tests."></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: Mini Library -->
+    <aside class="card">
+      <div class="panel">
+        <h2>Mini Library <span class="badge" id="libCount"></span></h2>
+        <div class="tagbar">
+          <span class="tag" data-libfilter="clarity">Clarity</span>
+          <span class="tag" data-libfilter="interpretation">Interpretation</span>
+          <span class="tag" data-libfilter="semantics">Semantics</span>
+          <span class="tag" data-libfilter="evidence">Evidence</span>
+          <span class="tag" data-libfilter="scholarship">Scholarship</span>
+          <span class="tag" data-libfilter="advocacy">Advocacy</span>
+        </div>
+        <div id="library" class="library"></div>
+      </div>
+    </aside>
+
+    <!-- BEGINNER -->
+    <section class="card section" data-level="beginner">
+      <div class="panel">
+        <h2>Clarity Scan + Live Preview <span class="badge">Beginner</span></h2>
+        <div class="row" style="gap:8px">
+          <button id="runClarity" class="btn">Run clarity scan</button>
+          <button id="togglePreview" class="btn ghost">Highlight in preview</button>
+          <span class="hint">Passive yellow, nominalizations blue, jargon red. Hover for explanations.</span>
+        </div>
+        <div id="clarityReport" class="popover" style="margin-top:10px"></div>
+        <h3 style="margin-top:10px">Preview with highlights</h3>
+        <div id="preview" class="preview"></div>
+      </div>
+    </section>
+
+    <section class="card section" data-level="beginner">
+      <div class="panel">
+        <h2>Basic Structure <span class="badge">Beginner</span></h2>
+        <div class="row" style="margin-bottom:6px">
+          <select id="structureType" class="btn">
+            <option value="IRAC">IRAC</option>
+            <option value="CRAC">CRAC</option>
+            <option value="RuleProof">Rule proof</option>
+            <option value="Policy">Policy argument</option>
+          </select>
+          <button id="insertOutline" class="btn">Insert outline</button>
+        </div>
+        <div class="hint">Fill each slot with short paragraphs.</div>
+      </div>
+    </section>
+
+    <!-- INTERMEDIATE -->
+    <section class="card section" data-level="intermediate">
+      <div class="panel">
+        <h2>Audience Tuner <span class="badge">Intermediate</span></h2>
+        <div class="row">
+          <select id="audience" class="btn">
+            <option value="court">Court</option>
+            <option value="legislature">Legislature</option>
+            <option value="public">Public</option>
+            <option value="academic">Academic</option>
+          </select>
+          <button id="rewriteAudience" class="btn">Rewrite for audience</button>
+          <button id="audTipsToggle" class="btn ghost">Show tips</button>
+        </div>
+        <div id="audTips" class="popover" style="margin-top:8px;display:none"></div>
+        <div id="audNote" class="hint" style="margin-top:6px"></div>
+      </div>
+    </section>
+
+    <section class="card section" data-level="intermediate">
+      <div class="panel">
+        <h2>Claim Type Tagger <span class="badge">Intermediate</span></h2>
+        <div class="row" style="gap:8px">
+          <button class="btn" id="splitSentences">Split sentences</button>
+          <label class="pill"><input type="checkbox" id="autoTag"> Auto-tag first pass</label>
+          <button class="btn ghost" id="epAudit">Epistemic audit</button>
+        </div>
+        <p class="hint">Manual tagging default. Select a type for each sentence. Auto-tag is a heuristic only.</p>
+        <div id="claims" class="grid" style="margin-top:8px;gap:6px"></div>
+        <div id="audit" class="popover" style="margin-top:8px"></div>
+        <div id="auditChart" style="margin-top:8px">
+          <div class="chart" id="chartBars"></div>
+          <div class="row" style="gap:14px;margin-top:4px">
+            <div class="label" style="width:24px">Doc</div>
+            <div class="label" style="width:24px">Desc</div>
+            <div class="label" style="width:24px">Emp</div>
+            <div class="label" style="width:24px">Norm</div>
+          </div>
+        </div>
+        <div class="popover" style="margin-top:8px">
+          <div class="small"><strong>What is an Epistemic Audit?</strong></div>
+          <div class="hint">A quick check on whether your draft mixes descriptive, doctrinal, empirical, and normative claims appropriately. It helps you separate what the law is from what it ought to be, and shows where evidence is needed.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card section" data-level="intermediate">
+      <div class="panel">
+        <h2>Hohfeld Mapper (lite) <span class="badge">Intermediate</span></h2>
+        <div class="hint tooltip" data-tip="Example: Party A: Tenant | Type: Claim-right vs Duty | Party B: Landlord">Hover for example</div>
+        <div class="row">
+          <input id="partyA" type="text" placeholder="Party A" />
+          <select id="hohType" class="btn">
+            <option>Claim-right vs Duty</option>
+            <option>Privilege vs No-right</option>
+            <option>Power vs Liability</option>
+            <option>Immunity vs Disability</option>
+          </select>
+          <input id="partyB" type="text" placeholder="Party B" />
+          <button id="addHoh" class="btn">Add</button>
+        </div>
+        <div id="hohOut" class="popover" style="margin-top:8px"></div>
+      </div>
+    </section>
+
+    <!-- ADVANCED -->
+    <section class="card section" data-level="advanced">
+      <div class="panel">
+        <h2>Dueling Canons <span class="badge">Advanced</span></h2>
+        <div class="row">
+          <input id="targetTerm" type="text" placeholder="Target term or phrase" />
+          <button id="runCanons" class="btn">Compare readings</button>
+        </div>
+        <div id="canonOut" class="popover" style="margin-top:8px"></div>
+        <p class="hint">Shows plain-meaning and specific-over-general readings versus purposive and protective readings against your clause.</p>
+      </div>
+    </section>
+
+    <section class="card section" data-level="advanced">
+      <div class="panel">
+        <h2>Corpus Window (on your text) <span class="badge">Advanced</span></h2>
+        <div class="row">
+          <input id="corpusTerm" type="text" placeholder="Search term" />
+          <button id="runCorpus" class="btn">Scan</button>
+        </div>
+        <div id="corpusOut" class="popover" style="margin-top:8px"></div>
+        <div class="hint">Scans only what you pasted here.</div>
+      </div>
+    </section>
+
+    <section class="card section" data-level="advanced">
+      <div class="panel">
+        <h2>Register Heatmap + Plain Rewrite <span class="badge">Advanced</span></h2>
+        <div class="metrics">
+          <div class="kpi"><h4>Nominalization rate</h4><div class="big" id="reg_nom">–</div><div class="bar"><i id="rb_nom"></i></div></div>
+          <div class="kpi"><h4>Avg sentence length</h4><div class="big" id="reg_len">–</div><div class="bar"><i id="rb_len"></i></div></div>
+          <div class="kpi"><h4>Jargon density</h4><div class="big" id="reg_jarg">–</div><div class="bar"><i id="rb_jarg"></i></div></div>
+          <div class="kpi"><h4>Concreteness score</h4><div class="big" id="reg_conc">–</div><div class="bar"><i id="rb_conc"></i></div></div>
+        </div>
+        <div class="row" style="margin-top:6px;gap:8px">
+          <button id="analyzeRegister" class="btn">Analyze register</button>
+          <button id="applyPlain" class="btn ghost">Plain rewrite</button>
+        </div>
+        <div id="regTips" class="popover" style="margin-top:8px"></div>
+      </div>
+    </section>
+
+    <section class="card section" data-level="advanced">
+      <div class="panel">
+        <h2>Wigmore Chart (lite) <span class="badge">Advanced</span></h2>
+        <div class="hint tooltip" data-tip="Example: 1 Fact: The agent saw the sale. 2 Inference: The seller knew price-fixing. Link 1 ⇒ 2.">Hover for example</div>
+        <div class="row">
+          <input id="nodeText" type="text" placeholder="Fact or inference" />
+          <select id="nodeType" class="btn"><option value="fact">Fact</option><option value="inference">Inference</option></select>
+          <button id="addNode" class="btn">Add node</button>
+          <select id="fromNode" class="btn"></select>
+          <select id="toNode" class="btn"></select>
+          <button id="linkNodes" class="btn ghost">Link</button>
+        </div>
+        <div id="wigmore" class="popover" style="margin-top:8px"></div>
+      </div>
+    </section>
+
+    <!-- EXPERT -->
+    <section class="card section" data-level="expert">
+      <div class="panel">
+        <h2>Scholarship Builder <span class="badge">Expert</span></h2>
+        <div class="row" style="flex-wrap:wrap">
+          <select id="modePicker" class="btn">
+            <option value="minow_practical">Minow: practical archetype</option>
+            <option value="posner_doctrinal">Posner: doctrinal</option>
+            <option value="posner_positive">Posner: positive/empirical</option>
+            <option value="posner_normative">Posner: normative</option>
+          </select>
+          <button id="loadChecklist" class="btn">Load checklist</button>
+        </div>
+        <div id="checklist" class="popover" style="margin-top:8px"></div>
+        <div id="modeGuidance" class="popover" style="margin-top:8px"></div>
+      </div>
+    </section>
+
+<!-- ============ SOURCE ANALYSER TOOLBOX ============ -->
+<section class="card">
+  <div class="panel">
+    <h2>Source Analyser Toolbox</h2>
+    <p class="hint">Add authorities you cite, then run the analysis. Colours map to authority type; groups map to jurisdiction.</p>
+
+    <!-- Input row -->
+    <div class="grid two" style="align-items:end">
+      <div class="block">
+        <label>Author or Case/Instrument Name</label>
+        <input id="sa_author" type="text" placeholder="e.g., Kharak Singh v. State of U.P. or H.L.A. Hart" />
+      </div>
+      <div class="block">
+        <label>Nature of Authority</label>
+        <select id="sa_type" class="btn">
+          <option value="Precedent">Precedent</option>
+          <option value="Statute">Statute</option>
+          <option value="Regulation">Regulation</option>
+          <option value="Policy">Policy</option>
+          <option value="Literature">Literature</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="block">
+        <label>Jurisdiction</label>
+        <select id="sa_jx" class="btn">
+          <option value="India">India</option>
+          <option value="EU">EU</option>
+          <option value="US">US</option>
+          <option value="UK">UK</option>
+          <option value="General">General</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="block">
+        <label>Year</label>
+        <input id="sa_year" type="number" min="1800" max="2100" placeholder="e.g., 2017" />
+      </div>
+      <div class="block" style="display:flex;gap:8px">
+        <button id="sa_add" class="btn">Add source</button>
+        <button id="sa_analyse" class="btn ghost">Analyse sources</button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="popover" style="margin-top:10px">
+      <div class="small"><strong>Sources</strong></div>
+      <div id="sa_table" class="hint" style="margin-top:6px">No sources yet.</div>
+      <div class="row" style="gap:8px;margin-top:8px">
+        <button id="sa_export" class="btn">Export sources (JSON)</button>
+        <button id="sa_share" class="btn ghost">Share sources</button>
+        <input id="sa_import_file" type="file" accept="application/json" style="display:none">
+        <button id="sa_import" class="btn ghost">Import JSON</button>
+        <span class="hint" id="sa_share_note"></span>
+      </div>
+    </div>
+
+    <!-- Visuals -->
+    <div class="grid" style="margin-top:12px; gap:12px">
+      <div class="popover">
+        <div class="small"><strong>References Network</strong></div>
+        <canvas id="sa_net" width="900" height="360" style="width:100%;height:auto;margin-top:6px"></canvas>
+        <div class="hint" style="margin-top:6px">Nodes are sources, coloured by authority type, grouped by jurisdiction.</div>
+      </div>
+      <div class="grid two">
+        <div class="popover">
+          <div class="small"><strong>Temporal Depth</strong></div>
+          <canvas id="sa_time" width="420" height="220" style="width:100%;height:auto;margin-top:6px"></canvas>
+          <div id="sa_time_note" class="hint" style="margin-top:6px"></div>
+        </div>
+        <div class="popover">
+          <div class="small"><strong>Jurisdictional Balance</strong></div>
+          <canvas id="sa_jx_chart" width="420" height="220" style="width:100%;height:auto;margin-top:6px"></canvas>
+          <div id="sa_jx_note" class="hint" style="margin-top:6px"></div>
+        </div>
+      </div>
+      <div class="popover">
+        <div class="small"><strong>Authority Mix</strong></div>
+        <canvas id="sa_type_donut" width="900" height="220" style="width:100%;height:auto;margin-top:6px"></canvas>
+        <div id="sa_type_note" class="hint" style="margin-top:6px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// ==================== Source Analyser Toolbox ====================
+(function(){
+  const TYPES = ["Precedent","Statute","Regulation","Policy","Literature","Other"];
+  const JXS   = ["India","EU","US","UK","General","Other"];
+  const TYPE_COL = {
+    "Precedent":"#8ec5ff","Statute":"#7bd389","Regulation":"#ffd166",
+    "Policy":"#f6a5ff","Literature":"#ff9aa2","Other":"#b0b7c3"
+  };
+  const JX_POS = {}; // filled later per canvas size
+
+  const els = {
+    author: document.getElementById('sa_author'),
+    type:   document.getElementById('sa_type'),
+    jx:     document.getElementById('sa_jx'),
+    year:   document.getElementById('sa_year'),
+    add:    document.getElementById('sa_add'),
+    analyse:document.getElementById('sa_analyse'),
+    table:  document.getElementById('sa_table'),
+    export: document.getElementById('sa_export'),
+    share:  document.getElementById('sa_share'),
+    shareNote: document.getElementById('sa_share_note'),
+    importBtn: document.getElementById('sa_import'),
+    importFile:document.getElementById('sa_import_file'),
+    net:    document.getElementById('sa_net'),
+    time:   document.getElementById('sa_time'),
+    timeNote: document.getElementById('sa_time_note'),
+    jxChart:document.getElementById('sa_jx_chart'),
+    jxNote: document.getElementById('sa_jx_note'),
+    typeDonut:document.getElementById('sa_type_donut'),
+    typeNote: document.getElementById('sa_type_note'),
+  };
+
+  // Data store (also autosave)
+  let SOURCES = [];
+  try {
+    const saved = localStorage.getItem('lwl_sources');
+    if(saved) SOURCES = JSON.parse(saved);
+  } catch {}
+
+  function persist(){ localStorage.setItem('lwl_sources', JSON.stringify(SOURCES)); }
+
+  // Table render
+  function renderTable(){
+    if(!SOURCES.length){ els.table.innerHTML = 'No sources yet.'; return; }
+    const rows = SOURCES.map((s,i)=>`<tr>
+      <td>${s.author}</td><td>${s.type}</td><td>${s.jx}</td><td>${s.year||''}</td>
+      <td><button data-del="${i}" class="btn ghost">Remove</button></td>
+    </tr>`).join('');
+    els.table.innerHTML = `<table style="width:100%;border-collapse:separate;border-spacing:0 6px">
+      <thead><tr><th style="text-align:left">Author/Case</th><th>Type</th><th>Jurisdiction</th><th>Year</th><th></th></tr></thead>
+      <tbody>${rows}</tbody></table>`;
+    // bind deletes
+    els.table.querySelectorAll('[data-del]').forEach(b=>{
+      b.addEventListener('click', ()=>{ SOURCES.splice(+b.dataset.del,1); persist(); renderTable(); });
+    });
+  }
+  renderTable();
+
+  // Add source
+  els.add.addEventListener('click', ()=>{
+    const s = {
+      author: (els.author.value||'').trim(),
+      type: els.type.value,
+      jx: els.jx.value,
+      year: parseInt(els.year.value,10) || null
+    };
+    if(!s.author){ alert('Please enter Author or Case/Instrument name.'); return; }
+    SOURCES.push(s); persist(); renderTable();
+    els.author.value=''; els.year.value='';
+  });
+
+  // Export/Share/Import
+  els.export.addEventListener('click', ()=>{
+    const blob=new Blob([JSON.stringify(SOURCES,null,2)],{type:'application/json'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='sources.json'; a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  els.share.addEventListener('click', ()=>{
+    if(!SOURCES.length){ els.shareNote.textContent='Add some sources first.'; return; }
+    const payload = btoa(unescape(encodeURIComponent(JSON.stringify(SOURCES))));
+    const url = location.origin + location.pathname + '?refs=' + payload;
+    navigator.clipboard.writeText(url).then(()=> els.shareNote.textContent='Share link copied.').catch(()=>{});
+  });
+  els.importBtn.addEventListener('click', ()=> els.importFile.click());
+  els.importFile.addEventListener('change', ()=>{
+    const f = els.importFile.files[0]; if(!f) return;
+    const r = new FileReader();
+    r.onload = e => { try{
+      const arr = JSON.parse(e.target.result);
+      if(Array.isArray(arr)){ SOURCES = arr; persist(); renderTable(); }
+    }catch{ alert('Invalid JSON'); } };
+    r.readAsText(f);
+  });
+
+  // Inbound shared refs
+  (function readShared(){
+    const p = new URLSearchParams(location.search).get('refs');
+    if(!p) return;
+    try { const arr = JSON.parse(decodeURIComponent(escape(atob(p))));
+      if(Array.isArray(arr)){ SOURCES = arr; persist(); renderTable(); }
+    } catch {}
+  })();
+
+  // Analyse button
+  els.analyse.addEventListener('click', ()=>{ drawAll(); });
+
+  // ---------- Drawing helpers (Canvas) ----------
+  function clear(ctx){ ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); }
+  function text(ctx, s, x, y, size=12, color="#cfe1ff", align="center"){
+    ctx.fillStyle=color; ctx.font=`${size}px Inter, Arial`; ctx.textAlign=align; ctx.fillText(s, x, y);
+  }
+  function lerp(a,b,t){ return a+(b-a)*t; }
+
+  // References Network (clustered by jurisdiction)
+  function drawNetwork(){
+    const ctx = els.net.getContext('2d'); clear(ctx);
+    const W = ctx.canvas.width, H = ctx.canvas.height;
+
+    // compute cluster centers on a circle
+    const R = Math.min(W,H)*0.35, cx = W/2, cy = H/2;
+    const groups = JXS.filter(j=> SOURCES.some(s=>s.jx===j));
+    const angStep = Math.PI*2 / Math.max(1,groups.length);
+    groups.forEach((jx, i)=>{
+      const ang = -Math.PI/2 + i*angStep;
+      JX_POS[jx] = {x: cx + R*Math.cos(ang), y: cy + R*Math.sin(ang)};
+    });
+
+    // draw cluster labels
+    ctx.globalAlpha=0.9;
+    groups.forEach(jx=>{
+      const p = JX_POS[jx];
+      ctx.beginPath(); ctx.arc(p.x, p.y, 46, 0, Math.PI*2); ctx.strokeStyle="#243356"; ctx.lineWidth=1; ctx.stroke();
+      text(ctx, jx, p.x, p.y-56, 12, "#9fb0c9");
+    });
+
+    // place nodes jittered around cluster centers
+    const placed = [];
+    SOURCES.forEach((s, idx)=>{
+      const base = JX_POS[s.jx] || {x:cx, y:cy};
+      const r = 14; // node radius
+      // jitter radius depends on cluster density
+      const density = Math.max(1, SOURCES.filter(x=>x.jx===s.jx).length);
+      const spread = Math.min(80, 30 + density*3);
+      const ang = (idx*97 % 360) * Math.PI/180;
+      const rad = 10 + (idx*23 % spread);
+      let x = base.x + rad*Math.cos(ang);
+      let y = base.y + rad*Math.sin(ang);
+
+      // draw node
+      ctx.beginPath();
+      ctx.fillStyle = TYPE_COL[s.type] || "#b0b7c3";
+      ctx.strokeStyle = "#1f2b47";
+      ctx.arc(x, y, 7, 0, Math.PI*2);
+      ctx.fill(); ctx.stroke();
+
+      // hover hit area record
+      placed.push({x,y,r:9, label:`${s.author} (${s.year||'n.d.'}) • ${s.type} • ${s.jx}`});
+    });
+
+    // simple legend
+    let lx = 18, ly = H-18;
+    TYPES.forEach(t=>{
+      ctx.fillStyle = TYPE_COL[t]; ctx.beginPath(); ctx.arc(lx, ly, 5, 0, Math.PI*2); ctx.fill();
+      text(ctx, t, lx+44, ly+4, 12, "#9fb0c9", "left"); lx += 150;
+    });
+
+    // mouse tooltip
+    const tip = document.createElement('div');
+    tip.style.position='absolute'; tip.style.pointerEvents='none'; tip.style.padding='6px 8px';
+    tip.style.background='#0e1a34'; tip.style.border='1px solid #29406e'; tip.style.borderRadius='8px';
+    tip.style.color='#dfeaff'; tip.style.fontSize='12px'; tip.style.display='none';
+    els.net.parentElement.style.position='relative';
+    els.net.parentElement.appendChild(tip);
+    els.net.onmousemove = (e)=>{
+      const rect = els.net.getBoundingClientRect();
+      const x = (e.clientX-rect.left)*(els.net.width/rect.width);
+      const y = (e.clientY-rect.top)*(els.net.height/rect.height);
+      const hit = placed.find(p=> Math.hypot(p.x-x,p.y-y) <= p.r);
+      if(hit){ tip.style.left=(e.offsetX+10)+'px'; tip.style.top=(e.offsetY+10)+'px'; tip.textContent=hit.label; tip.style.display='block'; }
+      else tip.style.display='none';
+    };
+  }
+
+  // Temporal Depth: histogram by year
+  function drawTimeline(){
+    const ctx = els.time.getContext('2d'); clear(ctx);
+    if(!SOURCES.length){ els.timeNote.textContent='Add sources to view timeline.'; return; }
+    const years = SOURCES.map(s=>s.year).filter(Boolean);
+    if(!years.length){ els.timeNote.textContent='No year data. Add years to see temporal depth.'; return; }
+
+    const minY = Math.min(...years), maxY = Math.max(...years);
+    const W=ctx.canvas.width, H=ctx.canvas.height, pad=36;
+    // bins: one per distinct year
+    const ys = Array.from(new Set(years)).sort((a,b)=>a-b);
+    const counts = ys.map(y=> years.filter(v=>v===y).length);
+    const maxC = Math.max(...counts);
+    // axes
+    ctx.strokeStyle="#243356"; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(pad, H-pad); ctx.lineTo(W-pad, H-pad); ctx.stroke();
+    // bars
+    const bw = Math.max(6, (W-2*pad)/ys.length - 4);
+    ys.forEach((y,i)=>{
+      const x = pad + i*((W-2*pad)/ys.length) + 2;
+      const h = (H-2*pad) * (counts[i]/maxC);
+      ctx.fillStyle="#8ec5ff"; ctx.fillRect(x, H-pad-h, bw, h);
+      if(ys.length<=12) text(ctx, String(y), x+bw/2, H-pad+12, 10, "#9fb0c9");
+    });
+    els.timeNote.textContent = `Years ${minY}–${maxY}. Peak year count ${maxC}.`;
+  }
+
+  // Jurisdictional balance: bar
+  function drawJx(){
+    const ctx = els.jxChart.getContext('2d'); clear(ctx);
+    if(!SOURCES.length){ els.jxNote.textContent='Add sources to view jurisdictional balance.'; return; }
+    const counts = JXS.map(j=> SOURCES.filter(s=>s.jx===j).length);
+    const maxC = Math.max(1, ...counts);
+    const W=ctx.canvas.width, H=ctx.canvas.height, pad=36, bw=40, gap=20;
+    // axis
+    ctx.strokeStyle="#243356"; ctx.beginPath(); ctx.moveTo(pad,H-pad); ctx.lineTo(W-pad,H-pad); ctx.stroke();
+    // bars
+    JXS.forEach((j, i)=>{
+      const x = pad + i*(bw+gap);
+      const h = (H-2*pad) * (counts[i]/maxC);
+      ctx.fillStyle="#7fb3ff"; ctx.fillRect(x, H-pad-h, bw, h);
+      text(ctx, j, x+bw/2, H-pad+12, 10, "#9fb0c9");
+    });
+    const tot = counts.reduce((a,b)=>a+b,0);
+    const dominant = JXS[counts.indexOf(Math.max(...counts))];
+    els.jxNote.textContent = `Total ${tot}. Dominant jurisdiction: ${dominant}.`;
+  }
+
+  // Authority mix: donut
+  function drawDonut(){
+    const ctx = els.typeDonut.getContext('2d'); clear(ctx);
+    const counts = TYPES.map(t=> SOURCES.filter(s=>s.type===t).length);
+    const sum = counts.reduce((a,b)=>a+b,0);
+    if(!sum){ els.typeNote.textContent='Add sources to view authority mix.'; return; }
+    const W=ctx.canvas.width, H=ctx.canvas.height, cx=W/2, cy=H/2, r=80, r2=44;
+    let ang = -Math.PI/2;
+    TYPES.forEach((t,i)=>{
+      const frac = counts[i]/sum; if(frac<=0) return;
+      const a2 = ang + frac*Math.PI*2;
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,ang,a2); ctx.closePath();
+      ctx.fillStyle=TYPE_COL[t]; ctx.fill(); ang = a2;
+    });
+    // hole
+    ctx.globalCompositeOperation='destination-out';
+    ctx.beginPath(); ctx.arc(cx,cy,r2,0,Math.PI*2); ctx.fill();
+    ctx.globalCompositeOperation='source-over';
+    // legend
+    let lx = 18, ly = H-18;
+    TYPES.forEach((t,i)=>{
+      ctx.fillStyle = TYPE_COL[t]; ctx.beginPath(); ctx.arc(lx, ly, 5, 0, Math.PI*2); ctx.fill();
+      text(ctx, `${t} (${counts[i]})`, lx+44, ly+4, 12, "#9fb0c9", "left"); lx += 160;
+    });
+    els.typeNote.textContent = `Total ${sum}. Balance across authority types shown.`;
+  }
+
+  function drawAll(){
+    drawNetwork();
+    drawTimeline();
+    drawJx();
+    drawDonut();
+  }
+
+  // Draw once if sources already present
+  if(SOURCES.length) drawAll();
+})();
+</script>
+    
+    <section class="card section" data-level="expert">
+      <div class="panel">
+        <h2>Export and Session <span class="badge">Expert</span></h2>
+        <div class="row" style="gap:8px">
+          <button id="exportBtn" class="btn">Download JSON</button>
+          <button id="clearSession" class="btn ghost">Clear autosave</button>
+          <span class="hint">Session autosaves locally. Use Save as PDF for a polished report.</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+<script>
+/* ------------------------------ Literature ------------------------------ */
+const LIBRARY = [
+  {id:"garner_plain", tags:["clarity","advocacy"], title:"Bryan A. Garner, Legal Writing in Plain English", note:"Clarity, concision, reader expectation."},
+  {id:"gopen_swan", tags:["clarity"], title:"George Gopen and Judith Swan, The Science of Scientific Writing", note:"Structure guides understanding."},
+  {id:"tiersma_legal_language", tags:["semantics","advocacy"], title:"Peter Tiersma, Legal Language", note:"Why legalese persists and how to avoid it."},
+  {id:"llewellyn_commonlaw", tags:["interpretation"], title:"Karl Llewellyn, The Common Law Tradition: Deciding Appeals", note:"Thrust and parry canons."},
+  {id:"scalia_garner", tags:["interpretation","advocacy"], title:"Antonin Scalia and Bryan Garner, Reading Law", note:"Catalog of canons and cautions."},
+  {id:"hohfeld_fundamental", tags:["semantics"], title:"W. N. Hohfeld, Fundamental Legal Conceptions", note:"Jural correlatives and opposites."},
+  {id:"hart_concept", tags:["scholarship","semantics"], title:"H. L. A. Hart, The Concept of Law", note:"Validity and the rule of recognition."},
+  {id:"pardo_allen", tags:["evidence"], title:"Michael Pardo and Ronald Allen, Juridical Proof and the Best Explanation", note:"What counts as proof in law."},
+  {id:"wigmore_science", tags:["evidence"], title:"John H. Wigmore, The Science of Judicial Proof", note:"Visualizing proof structures."},
+  {id:"posner_present", tags:["scholarship"], title:"Richard Posner, The Present Situation in Legal Scholarship", note:"Doctrinal, positive, normative."},
+  {id:"minow_archetypal", tags:["scholarship"], title:"Martha Minow, Archetypal Legal Scholarship: A Field Guide", note:"Archetypes and how to build them."}
+];
+const libraryDiv = document.getElementById('library');
+const libCount = document.getElementById('libCount');
+function renderLibrary(filterTag=null){
+  libraryDiv.innerHTML = '';
+  const items = LIBRARY.filter(it=>!filterTag || it.tags.includes(filterTag));
+  items.forEach(it=>{
+    const d = document.createElement('div');
+    d.className='lib-item';
+    d.innerHTML = `<div class="title">${it.title}</div>
+                   <div class="hint">${it.note}</div>
+                   <div class="meta">${it.tags.map(t=>`<span class="pill">${t}</span>`).join(' ')}</div>`;
+    libraryDiv.appendChild(d);
+  });
+  libCount.textContent = `${items.length}`;
+}
+renderLibrary();
+document.querySelectorAll('[data-libfilter]').forEach(tag=>{
+  tag.addEventListener('click', ()=> renderLibrary(tag.dataset.libfilter));
+});
+document.getElementById('showSources').addEventListener('click', ()=>{
+  alert(LIBRARY.map(x=>"• "+x.title).join("\n"));
+});
+
+/* ------------------------------ Mode toggling ----------------------------- */
+const sections = Array.from(document.querySelectorAll('.section'));
+const modes = Array.from(document.querySelectorAll('.mode[data-mode]'));
+document.getElementById('showAll').addEventListener('click', ()=>{
+  modes.forEach(m=> m.classList.remove('active'));
+  sections.forEach(s=> s.classList.add('visible'));
+});
+function setMode(level){
+  modes.forEach(m=> m.classList.toggle('active', m.dataset.mode===level));
+  sections.forEach(s=> s.classList.toggle('visible', s.dataset.level===level));
+}
+modes.forEach(m=> m.addEventListener('click', ()=> setMode(m.dataset.mode)));
+setMode('beginner');
+
+/* ------------------------- Autosave + Share + PDF ------------------------- */
+const ed = document.getElementById('editor');
+const clause = document.getElementById('clause');
+const facts = document.getElementById('facts');
+function saveSession(){
+  const data={draft:ed.value, clause:clause.value, facts:facts.value};
+  localStorage.setItem('lwl_session', JSON.stringify(data));
+}
+[ed,clause,facts].forEach(el=> el.addEventListener('input', saveSession));
+(function restore(){
+  const raw = localStorage.getItem('lwl_session');
+  if(!raw) return;
+  try { const d=JSON.parse(raw); ed.value=d.draft||''; clause.value=d.clause||''; facts.value=d.facts||''; } catch {}
+})();
+document.getElementById('clearSession').addEventListener('click', ()=>{ localStorage.removeItem('lwl_session'); alert('Cleared autosave.'); });
+document.getElementById('savePDF').addEventListener('click', ()=> window.print());
+document.getElementById('shareBtn').addEventListener('click', ()=>{
+  const payload = btoa(unescape(encodeURIComponent(JSON.stringify({d:ed.value,c:clause.value,f:facts.value}))));
+  const url = location.origin + location.pathname + '?s=' + payload;
+  navigator.clipboard.writeText(url).then(()=> document.getElementById('shareNote').textContent='Link copied.').catch(()=>{});
+});
+(function readShare(){
+  const p = new URLSearchParams(location.search).get('s');
+  if(!p) return; try{
+    const obj = JSON.parse(decodeURIComponent(escape(atob(p))));
+    ed.value=obj.d||''; clause.value=obj.c||''; facts.value=obj.f||'';
+  }catch{}
+})();
+
+/* ----------------------------- Clarity Metrics ---------------------------- */
+function splitSentences(text){ return text.replace(/\s+/g,' ').match(/[^.!?]+[.!?]*/g)||[] }
+function wordCount(s){ return (s.trim().match(/\b\w+\b/g)||[]).length }
+function passiveFlags(text){ const re=/\b(?:was|were|be|been|being|is|are|am)\s+\w+(?:ed|en)\b/gi; return (text.match(re)||[]).length }
+function nominalizations(text){ const re=/\b\w+(?:tion|sion|ment|ance|ence|ity|ness|ship|al|ure)\b/gi; return (text.match(re)||[]).length }
+function jargonDensity(text){
+  const jargon=['heretofore','therewith','whereof','aforementioned','hereinafter','pursuant','notwithstanding','inter alia','ipso facto','mutatis mutandis'];
+  let c=0; jargon.forEach(j=>{ const re=new RegExp('\\b'+j+'\\b','gi'); c+=(text.match(re)||[]).length;});
+  const words=Math.max(1, wordCount(text)); return {count:c, rate:c/words, words};
+}
+function setBar(id, val){ document.getElementById(id).style.width = Math.max(0,Math.min(100,Math.round(val*100))) + '%' }
+
+const preview = document.getElementById('preview');
+function buildPreview(text){
+  // highlights with tooltips
+  let out = text;
+  // jargon first
+  const jargon=['heretofore','therewith','whereof','aforementioned','hereinafter','pursuant','notwithstanding','inter alia','ipso facto','mutatis mutandis'];
+  jargon.forEach(j=>{
+    const re=new RegExp('\\b'+j+'\\b','gi');
+    out = out.replace(re, m=> `<span class="hl-jargon tooltip" data-tip="Jargon: prefer a plain alternative.">${m}</span>`);
+  });
+  // passive
+  out = out.replace(/\b(?:was|were|be|been|being|is|are|am)\s+(\w+(?:ed|en))\b/gi,
+    (m, v)=> `<span class="hl-passive tooltip" data-tip="Passive: consider actor-first (who did what).">${m}</span>`);
+  // nominalizations
+  out = out.replace(/\b(\w+(?:tion|sion|ment|ance|ence|ity|ness|ship|al|ure))\b/gi,
+    (m)=> `<span class="hl-nom tooltip" data-tip="Nominalization: noun from verb; can reduce directness.">${m}</span>`);
+  preview.innerHTML = out;
+}
+document.getElementById('togglePreview').addEventListener('click', ()=> buildPreview(ed.value));
+document.getElementById('runClarity').addEventListener('click', ()=>{
+  const text = ed.value;
+  const sents = splitSentences(text);
+  const lengths = sents.map(wordCount);
+  const avg = lengths.length? lengths.reduce((a,b)=>a+b,0)/lengths.length : 0;
+  const pass = passiveFlags(text);
+  const nom = nominalizations(text);
+  const jInfo = jargonDensity(text);
+
+  document.getElementById('m_asl').textContent = lengths.length? avg.toFixed(1):'0.0';
+  document.getElementById('m_pass').textContent = pass;
+  document.getElementById('m_nom').textContent = nom;
+  document.getElementById('m_jarg').textContent = (jInfo.rate*100).toFixed(1)+'‰';
+  setBar('b_asl', avg/40); setBar('b_pass', Math.min(pass/10,1));
+  setBar('b_nom', Math.min(nom/30,1)); setBar('b_jarg', Math.min(jInfo.rate*8,1));
+
+  const tips=[];
+  if(avg>25) tips.push('<span class="warn">Long average sentences.</span> Aim 15–25 words.');
+  if(pass>0) tips.push('<span class="warn">Passive voice flags.</span> Consider actor-first.');
+  if(nom>10) tips.push('<span class="bad">High nominalization load.</span> Use verbs.');
+  if(jInfo.rate>0.01) tips.push('<span class="warn">Jargon density.</span> Swap plain terms.');
+
+  document.getElementById('clarityReport').innerHTML =
+    `<div class="small"><strong>Clarity scan</strong> • Sources: Garner; Gopen & Swan</div>
+     <div style="margin-top:6px">${tips.join(' ')||'Looks clear.'}</div>`;
+});
+
+/* ------------------------------ Structure --------------------------------- */
+document.getElementById('insertOutline').addEventListener('click', ()=>{
+  const t = document.getElementById('structureType').value;
+  const blocks = {
+    IRAC: `Issue:\nRule:\nApplication:\nConclusion:\n`,
+    CRAC: `Conclusion:\nRule:\nApplication:\nConclusion (refined):\n`,
+    RuleProof: `Rule claim:\nAuthority (primary):\nAuthority (counter):\nSynthesis:\n`,
+    Policy: `Problem:\nPolicy objective:\nTradeoffs:\nRecommendation:\n`
+  };
+  ed.value = (ed.value? ed.value + "\n\n" : "") + blocks[t];
+});
+
+/* ------------------------------ Audience ---------------------------------- */
+const audNote = document.getElementById('audNote');
+const audTips = document.getElementById('audTips');
+document.getElementById('audTipsToggle').addEventListener('click', ()=>{
+  audTips.style.display = audTips.style.display==='none' ? 'block' : 'none';
+  audTips.innerHTML = `<div class="small"><strong>Audience tips</strong></div>
+  <ul>
+    <li>Court: foreground authority, reduce modifiers, signpost holdings.</li>
+    <li>Legislature: purpose, consequences, and administrative feasibility.</li>
+    <li>Public: short sentences, low jargon, clear stakes and examples.</li>
+    <li>Academic: separate is from ought; show limits and counterarguments.</li>
+  </ul>
+  <div class="small">Titles: Garner; Tiersma.</div>`;
+});
+document.getElementById('rewriteAudience').addEventListener('click', ()=>{
+  const aud = document.getElementById('audience').value;
+  let text = ed.value;
+  if(!text.trim()){audNote.textContent="Add some draft text first."; return;}
+  function shorten(s,max=22){return splitSentences(s).map(x=>{
+    const w=x.trim().split(/\s+/); return w.length<=max? x.trim(): w.slice(0,max).join(' ')+'…';
+  }).join(' ')}
+  function stripAdverbs(s){return s.replace(/\b\w+ly\b/g,'')}
+  if(aud==='court'){ text = stripAdverbs(text); audNote.textContent="Court rewrite applied."; }
+  if(aud==='legislature'){ text = shorten(text,20); audNote.textContent="Legislature rewrite applied."; }
+  if(aud==='public'){ text = shorten(text,16).replace(/[\(\)]/g,''); audNote.textContent="Public rewrite applied."; }
+  if(aud==='academic'){ audNote.textContent="Academic tips shown; retain nuance."; }
+  ed.value = text; saveSession();
+});
+
+/* --------------------------- Claim Type + Audit --------------------------- */
+const claimsDiv = document.getElementById('claims');
+const autoTag = document.getElementById('autoTag');
+function naiveType(s){
+  if(/\bAct|Code|Article|§|v\.\b/.test(s)) return 'doctrinal';
+  if(/\bdata|survey|study|sample|regression|dataset|empirical\b/i.test(s)) return 'empirical';
+  if(/\bshould|ought|recommend|must\b/i.test(s)) return 'normative';
+  return 'descriptive';
+}
+function drawChart(counts){
+  const bars = document.getElementById('chartBars'); bars.innerHTML='';
+  const keys = ['doctrinal','descriptive','empirical','normative'];
+  const max = Math.max(1, ...keys.map(k=>counts[k]||0));
+  keys.forEach(k=>{
+    const v = counts[k]||0; const bar = document.createElement('div');
+    bar.className='barv'; bar.style.height = (v/max*100)+'%'; bar.title=`${k}: ${v}`;
+    bars.appendChild(bar);
+  });
+}
+document.getElementById('splitSentences').addEventListener('click', ()=>{
+  claimsDiv.innerHTML='';
+  splitSentences(ed.value).forEach((s,i)=>{
+    const row=document.createElement('div'); row.className='row';
+    const sel = document.createElement('select'); sel.className='btn small ct';
+    sel.innerHTML = `<option value="" selected disabled>Select type</option>
+      <option value="doctrinal">Doctrinal</option>
+      <option value="descriptive">Descriptive</option>
+      <option value="empirical">Empirical</option>
+      <option value="normative">Normative</option>`;
+    if(autoTag.checked){ const t = naiveType(s); sel.value=t; }
+    row.appendChild(Object.assign(document.createElement('span'),{className:'badge',textContent:String(i+1)}));
+    const span = Object.assign(document.createElement('span'),{className:'small',style:'flex:1',textContent:s.trim()});
+    row.appendChild(span); row.appendChild(sel); claimsDiv.appendChild(row);
+  });
+});
+document.getElementById('epAudit').addEventListener('click', ()=>{
+  const tags = Array.from(document.querySelectorAll('.ct')).map(s=>s.value).filter(Boolean);
+  const count = tags.reduce((acc,t)=> (acc[t]=(acc[t]||0)+1, acc), {});
+  const tot = tags.length||1;
+  const advice = [];
+  if((count.normative||0) > tot*0.5) advice.push('Many normative sentences. Separate ought from is and justify values.');
+  if((count.empirical||0) && !/data|study|survey|dataset/i.test(ed.value)) advice.push('Empirical claims present. State evidence and method.');
+  if((count.doctrinal||0) && !/v\.|§|Act|Code|Article/i.test(ed.value)) advice.push('Doctrinal claims lack visible authority. Add citations.');
+  document.getElementById('audit').innerHTML =
+    `<div class="small"><strong>Epistemic audit</strong> • Titles: Posner; Pardo & Allen; Hart</div>
+     <div>Doctrinal: ${count.doctrinal||0} | Descriptive: ${count.descriptive||0} | Empirical: ${count.empirical||0} | Normative: ${count.normative||0}</div>
+     <div class="hint" style="margin-top:6px">${advice.join(' ')||'Balance looks reasonable.'}</div>`;
+  drawChart(count);
+});
+
+/* ------------------------------- Hohfeld ---------------------------------- */
+const hohOut = document.getElementById('hohOut'); const hohList=[];
+document.getElementById('addHoh').addEventListener('click', ()=>{
+  const A=document.getElementById('partyA').value||'A';
+  const B=document.getElementById('partyB').value||'B';
+  const T=document.getElementById('hohType').value; hohList.push({A,B,T});
+  hohOut.innerHTML = `<div class="small"><strong>Relations</strong> • Title: Hohfeld, Fundamental Legal Conceptions</div>`+
+    hohList.map(x=>`<div>⟨${x.A}⟩ ↔ <strong>${x.T}</strong> ↔ ⟨${x.B}⟩</div>`).join('');
+});
+
+/* ------------------------------- Canons ----------------------------------- */
+document.getElementById('runCanons').addEventListener('click', ()=>{
+  const cl=clause.value.trim(); const term=document.getElementById('targetTerm').value.trim();
+  if(!cl||!term){document.getElementById('canonOut').textContent='Add a clause and a target term.';return;}
+  // find context snippet
+  const idx = cl.toLowerCase().indexOf(term.toLowerCase());
+  const snippet = idx>=0? cl.slice(Math.max(0,idx-40), Math.min(cl.length,idx+term.length+40)).replace(/\n/g,' ') : cl;
+  const thrust = [
+    `Plain meaning: “${term}” as ordinarily used in this clause.`,
+    `Specific-over-general: if "${term}" appears in a list, specific terms govern the general.`];
+  const parry = [
+    `Purposive: read “${term}” to advance the statute’s evident aim.`,
+    `Protective/lenity: if penal or rights-restricting, resolve ambiguity for the individual.`];
+  document.getElementById('canonOut').innerHTML =
+   `<div class="small"><strong>Paired readings against context</strong> • Titles: Llewellyn; Scalia & Garner</div>
+    <div class="hint">Context: … ${snippet} …</div>
+    <div class="grid two" style="margin-top:6px">
+      <div><div class="badge">Thrust</div><ul>${thrust.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+      <div><div class="badge">Parry</div><ul>${parry.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+    </div>`;
+});
+
+/* ------------------------------ Corpus Window ----------------------------- */
+document.getElementById('runCorpus').addEventListener('click', ()=>{
+  const term=document.getElementById('corpusTerm').value.trim();
+  const text=(clause.value+"\n"+ed.value+"\n"+facts.value).toLowerCase();
+  if(!term){document.getElementById('corpusOut').textContent='Enter a search term.';return;}
+  const words=text.split(/\W+/).filter(Boolean);
+  const freq=words.filter(w=>w===term.toLowerCase()).length;
+  const colloc={}; for(let i=0;i<words.length;i++){ if(words[i]===term.toLowerCase()){[words[i-1]||'',words[i+1]||''].forEach(w=>{if(!w)return; colloc[w]=(colloc[w]||0)+1;});}}
+  const top=Object.entries(colloc).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([w,c])=>`<span class="pill">${w}<sup>${c}</sup></span>`).join(' ');
+  document.getElementById('corpusOut').innerHTML =
+    `<div class="small"><strong>Frequency and collocates for “${term}”</strong></div>
+     <div>Occurrences: <strong>${freq}</strong></div><div style="margin-top:6px">Nearby words: ${top||'n/a'}</div>`;
+});
+
+/* ------------------------------ Register Heatmap -------------------------- */
+function nominalizationRate(text){ return nominalizations(text)/Math.max(1,wordCount(text)); }
+function concreteness(text){ const conc=(text.match(/\b(court|judge|contract|data|price|market|road|child|tree|phone|paper|image)\b/gi)||[]).length;
+  const abst=(text.match(/\b(?:tion|sion|ment|ity|ness)\b/gi)||[]).length; return (conc+1)/(conc+abst+1); }
+function setKPIs(vals){
+  document.getElementById('reg_nom').textContent=(vals.nom*100).toFixed(1)+'‰';
+  document.getElementById('reg_len').textContent=vals.asl.toFixed(1);
+  document.getElementById('reg_jarg').textContent=(vals.jarg*100).toFixed(1)+'‰';
+  document.getElementById('reg_conc').textContent=Math.round(vals.conc*100)+'%';
+  document.getElementById('rb_nom').style.width=Math.min(vals.nom*6,1)*100+'%';
+  document.getElementById('rb_len').style.width=Math.min(vals.asl/40,1)*100+'%';
+  document.getElementById('rb_jarg').style.width=Math.min(vals.jarg*8,1)*100+'%';
+  document.getElementById('rb_conc').style.width=Math.min(vals.conc,1)*100+'%';
+}
+document.getElementById('analyzeRegister').addEventListener('click', ()=>{
+  const text=ed.value, sents=splitSentences(text);
+  const vals={ nom:nominalizationRate(text), asl:sents.length? sents.map(wordCount).reduce((a,b)=>a+b,0)/sents.length:0,
+               jarg:jargonDensity(text).rate, conc:concreteness(text) };
+  setKPIs(vals);
+  const tips=[];
+  if(vals.nom>0.015) tips.push('Reduce nominalizations.');
+  if(vals.asl>26) tips.push('Shorten sentences.');
+  if(vals.jarg>0.01) tips.push('Replace legalese with plainer terms.');
+  if(vals.conc<0.4) tips.push('Add concrete examples.');
+  document.getElementById('regTips').innerHTML =
+   `<div class="small"><strong>Register suggestions</strong> • Titles: Garner; Gopen & Swan; Tiersma</div>
+    <ul>${(tips.length? tips:['Looks balanced.']).map(t=>`<li>${t}</li>`).join('')}</ul>`;
+});
+document.getElementById('applyPlain').addEventListener('click', ()=>{
+  let t=ed.value;
+  // De-jargon
+  t=t.replace(/\bhereinafter\b/gi,'from now on')
+     .replace(/\binter alia\b/gi,'among others')
+     .replace(/\bnotwithstanding\b/gi,'despite')
+     .replace(/\baforementioned\b/gi,'mentioned above')
+     .replace(/\bpursuant to\b/gi,'under');
+  // De-nominalize some common patterns
+  t=t.replace(/\bconduct an analysis of\b/gi,'analyze')
+     .replace(/\bprovide an explanation\b/gi,'explain')
+     .replace(/\bmake a recommendation\b/gi,'recommend')
+     .replace(/\bperform an assessment\b/gi,'assess');
+  // Shorten very long sentences a bit
+  t = splitSentences(t).map(s=> {
+    const w=s.trim().split(/\s+/); return w.length>32? w.slice(0,28).join(' ')+'…': s;
+  }).join(' ');
+  ed.value=t; saveSession();
+});
+
+/* ------------------------------- Wigmore Lite ----------------------------- */
+const nodes=[], edges=[]; const nodeSelFrom=document.getElementById('fromNode'), nodeSelTo=document.getElementById('toNode');
+function renderNodeSelects(){ [nodeSelFrom,nodeSelTo].forEach(sel=> sel.innerHTML=nodes.map((n,i)=>`<option value="${i}">${i+1}. ${n.type}: ${n.text.slice(0,22)}</option>`).join('')); }
+function renderWigmore(){
+  const G=document.getElementById('wigmore');
+  const nodeList=nodes.map((n,i)=>`<li>${i+1}. <strong>${n.type}</strong> — ${n.text}</li>`).join('');
+  const edgeList=edges.map(e=>`<li>${+e.from+1} ⇒ ${+e.to+1}</li>`).join('');
+  G.innerHTML = `<div class="small"><strong>Proof graph</strong> • Title: Wigmore, The Science of Judicial Proof</div>
+                 <div class="grid two"><div><div class="small">Nodes</div><ul>${nodeList||'<li>None</li>'}</ul></div>
+                 <div><div class="small">Links</div><ul>${edgeList||'<li>None</li>'}</ul></div></div>`;
+}
+document.getElementById('addNode').addEventListener('click', ()=>{
+  const txt=document.getElementById('nodeText').value.trim(); const type=document.getElementById('nodeType').value;
+  if(!txt) return; nodes.push({text:txt,type}); document.getElementById('nodeText').value=''; renderNodeSelects(); renderWigmore();
+});
+document.getElementById('linkNodes').addEventListener('click', ()=>{ if(!nodes.length) return; edges.push({from:nodeSelFrom.value,to:nodeSelTo.value}); renderWigmore(); });
+
+/* --------------------------- Scholarship Builder ------------------------- */
+const checklistDiv=document.getElementById('checklist'), modeGuidance=document.getElementById('modeGuidance');
+document.getElementById('loadChecklist').addEventListener('click', ()=>{
+  const mode=document.getElementById('modePicker').value;
+  const lists={
+    minow_practical:[
+      'Define the practical problem in 1–2 sentences.',
+      'Map stakeholders and institutional levers that can act.',
+      'Propose a concrete intervention and implementation steps.',
+      'Evaluate tradeoffs, costs, and limits; specify metrics for success.'
+    ],
+    posner_doctrinal:[
+      'State jurisdiction, time frame, and posture.',
+      'Survey controlling and persuasive authority, including counter-authority.',
+      'Synthesize splits; reconcile or justify divergence.',
+      'State the doctrinal clarification precisely.'
+    ],
+    posner_positive:[
+      'State the empirical question and policy/legal relevance.',
+      'Describe data and identification strategy (what makes inference credible).',
+      'Report results with robustness checks and limitations.',
+      'Explain implications for doctrine or policy.'
+    ],
+    posner_normative:[
+      'Separate description from prescription.',
+      'Justify values and institutional competence.',
+      'Weigh costs and second-order effects.',
+      'Address strongest objections.'
+    ]
+  };
+  const examples={
+    minow_practical:{move:'Move',eg:'Translate a remedial idea into concrete administrative steps.',pit:'Avoid vague “ought to” with no implementation.'},
+    posner_doctrinal:{move:'Move',eg:'Extract elements, apply to hard cases, and handle counter-authority head-on.',pit:'Avoid cherry-picking; do a structured survey.'},
+    posner_positive:{move:'Move',eg:'Identify a quasi-experimental design or credible control.',pit:'Avoid causal claims from raw correlations.'},
+    posner_normative:{move:'Move',eg:'State the value framework and institutional role before prescribing.',pit:'Avoid mixing is and ought.'}
+  };
+  const eg=examples[mode];
+  checklistDiv.innerHTML = `<div class="small"><strong>Checklist</strong> • Titles: Minow; Posner</div><ul>${
+    (lists[mode]||[]).map(x=>`<li>${x}</li>`).join('')}</ul>`;
+  modeGuidance.innerHTML = `<div class="small"><strong>Guidance</strong></div>
+    <div><span class="badge">${eg.move}</span> ${eg.eg}</div>
+    <div class="hint" style="margin-top:6px"><span class="badge">Pitfall</span> ${eg.pit}</div>`;
+});
+
+/* -------------------------------- Export ---------------------------------- */
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  const data={
+    draft: ed.value, clause: clause.value, facts: facts.value,
+    sources: LIBRARY.map(x=>x.title),
+    wigmore:{nodes,edges}, hohfeld: hohList
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='legal-writing-lab-report.json'; a.click();
+  URL.revokeObjectURL(a.href);
+});
+</script>
+</body>
+</html>
