@@ -8,7 +8,7 @@
   :root{
     --bg:#0b111f; --panel:#101a33; --ink:#eaf1ff; --muted:#9fb0c9; --line:#1e2c4a;
     --chip:#0f1a33; --accent:#7fb3ff; --ok:#2ecc71; --warn:#ffd166; --bad:#ff6b6b;
-    --hl-passive:#fff1a6; --hl-nom:#c7d8ff; --hl-jargon:#ffc7c7;
+    --hl-passive:#fff1a6; --hl-jargon:#ffc7c7;
   }
   *{box-sizing:border-box}
   body{margin:0;background:radial-gradient(1000px 700px at 18% -10%,#172449 0%,#0b111f 60%);color:var(--ink);
@@ -39,8 +39,8 @@
   .btn.ghost{background:transparent}
   .hint{color:var(--muted);font-size:12px}
   .pill{background:var(--chip);border:1px solid #24385f;color:#cfe1ff;padding:6px 10px;border-radius:999px;font-size:12px}
-  .metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-  @media(min-width:900px){.metrics{grid-template-columns:repeat(4,1fr)}}
+  .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  @media(min-width:900px){.metrics{grid-template-columns:repeat(3,1fr)}}
   .kpi{padding:10px;border-radius:12px;background:linear-gradient(180deg,#0f1930,#0b1224);border:1px solid #1f2b47}
   .kpi h4{margin:0 0 6px;font-size:12px;color:#aab9d6}
   .kpi .big{font-size:22px;font-weight:700}
@@ -62,7 +62,6 @@
   /* Preview highlighting */
   .preview{min-height:180px;background:#0c1428;border:1px solid #223456;border-radius:12px;padding:10px 12px;white-space:pre-wrap}
   .hl-passive{background:var(--hl-passive)}
-  .hl-nom{background:var(--hl-nom)}
   .hl-jargon{background:var(--hl-jargon)}
   .tooltip{position:relative;cursor:help}
   .tooltip[data-tip]:hover:after{
@@ -73,11 +72,6 @@
   .chart{display:flex;gap:6px;align-items:flex-end;height:120px;margin-top:8px}
   .barv{width:24px;background:linear-gradient(180deg,#7fb3ff,#a4d1ff);border:1px solid #284879;border-radius:6px}
   .label{font-size:11px;text-align:center;margin-top:4px;color:#bfd0f3}
-  /* print */
-  @media print{
-    .modes, .tagbar, .toggle-all, .btn, select, input, textarea{display:none!important}
-    .card{box-shadow:none;border:1px solid #999}
-  }
 </style>
 </head>
 <body>
@@ -106,11 +100,6 @@
           <div class="block">
             <label for="editor">Draft</label>
             <textarea id="editor" rows="12" placeholder="Paste or write your legal text here."></textarea>
-            <div class="row" style="margin-top:6px;gap:8px">
-              <button id="savePDF" class="btn">Save as PDF</button>
-              <button id="shareBtn" class="btn ghost">Share</button>
-              <span class="hint" id="shareNote"></span>
-            </div>
           </div>
           <div class="block">
             <label for="clause">Clause or statutory text</label>
@@ -145,7 +134,7 @@
         <div class="row" style="gap:8px">
           <button id="runClarity" class="btn">Run clarity scan</button>
           <button id="togglePreview" class="btn ghost">Highlight in preview</button>
-          <span class="hint">Passive yellow, nominalizations blue, jargon red. Hover for explanations.</span>
+          <span class="hint">Passive yellow. Jargon red. Hover for explanations.</span>
         </div>
         <div id="clarityReport" class="popover" style="margin-top:10px"></div>
         <h3 style="margin-top:10px">Preview with highlights</h3>
@@ -172,31 +161,13 @@
     <!-- INTERMEDIATE -->
     <section class="card section" data-level="intermediate">
       <div class="panel">
-        <h2>Audience Tuner <span class="badge">Intermediate</span></h2>
-        <div class="row">
-          <select id="audience" class="btn">
-            <option value="court">Court</option>
-            <option value="legislature">Legislature</option>
-            <option value="public">Public</option>
-            <option value="academic">Academic</option>
-          </select>
-          <button id="rewriteAudience" class="btn">Rewrite for audience</button>
-          <button id="audTipsToggle" class="btn ghost">Show tips</button>
-        </div>
-        <div id="audTips" class="popover" style="margin-top:8px;display:none"></div>
-        <div id="audNote" class="hint" style="margin-top:6px"></div>
-      </div>
-    </section>
-
-    <section class="card section" data-level="intermediate">
-      <div class="panel">
         <h2>Claim Type Tagger <span class="badge">Intermediate</span></h2>
         <div class="row" style="gap:8px">
           <button class="btn" id="splitSentences">Split sentences</button>
           <label class="pill"><input type="checkbox" id="autoTag"> Auto-tag first pass</label>
           <button class="btn ghost" id="epAudit">Epistemic audit</button>
         </div>
-        <p class="hint">Manual tagging default. Select a type for each sentence. Auto-tag is a heuristic only.</p>
+        <p class="hint">Manual tagging by default. Select a type for each sentence. Auto-tag is a heuristic only.</p>
         <div id="claims" class="grid" style="margin-top:8px;gap:6px"></div>
         <div id="audit" class="popover" style="margin-top:8px"></div>
         <div id="auditChart" style="margin-top:8px">
@@ -261,16 +232,14 @@
 
     <section class="card section" data-level="advanced">
       <div class="panel">
-        <h2>Register Heatmap + Plain Rewrite <span class="badge">Advanced</span></h2>
+        <h2>Register Heatmap <span class="badge">Advanced</span></h2>
         <div class="metrics">
-          <div class="kpi"><h4>Nominalization rate</h4><div class="big" id="reg_nom">–</div><div class="bar"><i id="rb_nom"></i></div></div>
           <div class="kpi"><h4>Avg sentence length</h4><div class="big" id="reg_len">–</div><div class="bar"><i id="rb_len"></i></div></div>
           <div class="kpi"><h4>Jargon density</h4><div class="big" id="reg_jarg">–</div><div class="bar"><i id="rb_jarg"></i></div></div>
           <div class="kpi"><h4>Concreteness score</h4><div class="big" id="reg_conc">–</div><div class="bar"><i id="rb_conc"></i></div></div>
         </div>
         <div class="row" style="margin-top:6px;gap:8px">
           <button id="analyzeRegister" class="btn">Analyze register</button>
-          <button id="applyPlain" class="btn ghost">Plain rewrite</button>
         </div>
         <div id="regTips" class="popover" style="margin-top:8px"></div>
       </div>
@@ -396,7 +365,7 @@
 </section>
 
 <script>
-// ==================== Source Analyser Toolbox ====================
+// ==================== Source Analyser Toolbox  ====================
 (function(){
   const TYPES = ["Precedent","Statute","Regulation","Policy","Literature","Other"];
   const JXS   = ["India","EU","US","UK","General","Other"];
@@ -670,9 +639,10 @@
       <div class="panel">
         <h2>Export and Session <span class="badge">Expert</span></h2>
         <div class="row" style="gap:8px">
-          <button id="exportBtn" class="btn">Download JSON</button>
+          <button id="exportBtn" class="btn">Save as JSON</button>
+          <button id="shareBtn" class="btn ghost">Share</button>
           <button id="clearSession" class="btn ghost">Clear autosave</button>
-          <span class="hint">Session autosaves locally. Use Save as PDF for a polished report.</span>
+          <span class="hint" id="shareNote">Session autosaves locally.</span>
         </div>
       </div>
     </section>
@@ -731,7 +701,7 @@ function setMode(level){
 modes.forEach(m=> m.addEventListener('click', ()=> setMode(m.dataset.mode)));
 setMode('beginner');
 
-/* ------------------------- Autosave + Share + PDF ------------------------- */
+/* ------------------------- Autosave + Share ------------------------- */
 const ed = document.getElementById('editor');
 const clause = document.getElementById('clause');
 const facts = document.getElementById('facts');
@@ -745,8 +715,9 @@ function saveSession(){
   if(!raw) return;
   try { const d=JSON.parse(raw); ed.value=d.draft||''; clause.value=d.clause||''; facts.value=d.facts||''; } catch {}
 })();
-document.getElementById('clearSession').addEventListener('click', ()=>{ localStorage.removeItem('lwl_session'); alert('Cleared autosave.'); });
-document.getElementById('savePDF').addEventListener('click', ()=> window.print());
+document.getElementById('clearSession').addEventListener('click', ()=>{
+  localStorage.removeItem('lwl_session'); alert('Cleared autosave.');
+});
 document.getElementById('shareBtn').addEventListener('click', ()=>{
   const payload = btoa(unescape(encodeURIComponent(JSON.stringify({d:ed.value,c:clause.value,f:facts.value}))));
   const url = location.origin + location.pathname + '?s=' + payload;
@@ -764,7 +735,6 @@ document.getElementById('shareBtn').addEventListener('click', ()=>{
 function splitSentences(text){ return text.replace(/\s+/g,' ').match(/[^.!?]+[.!?]*/g)||[] }
 function wordCount(s){ return (s.trim().match(/\b\w+\b/g)||[]).length }
 function passiveFlags(text){ const re=/\b(?:was|were|be|been|being|is|are|am)\s+\w+(?:ed|en)\b/gi; return (text.match(re)||[]).length }
-function nominalizations(text){ const re=/\b\w+(?:tion|sion|ment|ance|ence|ity|ness|ship|al|ure)\b/gi; return (text.match(re)||[]).length }
 function jargonDensity(text){
   const jargon=['heretofore','therewith','whereof','aforementioned','hereinafter','pursuant','notwithstanding','inter alia','ipso facto','mutatis mutandis'];
   let c=0; jargon.forEach(j=>{ const re=new RegExp('\\b'+j+'\\b','gi'); c+=(text.match(re)||[]).length;});
@@ -774,48 +744,36 @@ function setBar(id, val){ document.getElementById(id).style.width = Math.max(0,M
 
 const preview = document.getElementById('preview');
 function buildPreview(text){
-  // highlights with tooltips
+  // highlight jargon first
   let out = text;
-  // jargon first
   const jargon=['heretofore','therewith','whereof','aforementioned','hereinafter','pursuant','notwithstanding','inter alia','ipso facto','mutatis mutandis'];
   jargon.forEach(j=>{
     const re=new RegExp('\\b'+j+'\\b','gi');
-    out = out.replace(re, m=> `<span class="hl-jargon tooltip" data-tip="Jargon: prefer a plain alternative.">${m}</span>`);
+    out = out.replace(re, m=> `<span class="hl-jargon tooltip" data-tip="Jargon: consider a plain alternative.">${m}</span>`);
   });
-  // passive
+  // highlight passive
   out = out.replace(/\b(?:was|were|be|been|being|is|are|am)\s+(\w+(?:ed|en))\b/gi,
-    (m, v)=> `<span class="hl-passive tooltip" data-tip="Passive: consider actor-first (who did what).">${m}</span>`);
-  // nominalizations
-  out = out.replace(/\b(\w+(?:tion|sion|ment|ance|ence|ity|ness|ship|al|ure))\b/gi,
-    (m)=> `<span class="hl-nom tooltip" data-tip="Nominalization: noun from verb; can reduce directness.">${m}</span>`);
+    (m)=> `<span class="hl-passive tooltip" data-tip="Passive: consider actor-first (who did what).">${m}</span>`);
   preview.innerHTML = out;
 }
 document.getElementById('togglePreview').addEventListener('click', ()=> buildPreview(ed.value));
+
 document.getElementById('runClarity').addEventListener('click', ()=>{
   const text = ed.value;
   const sents = splitSentences(text);
   const lengths = sents.map(wordCount);
   const avg = lengths.length? lengths.reduce((a,b)=>a+b,0)/lengths.length : 0;
   const pass = passiveFlags(text);
-  const nom = nominalizations(text);
   const jInfo = jargonDensity(text);
 
-  document.getElementById('m_asl').textContent = lengths.length? avg.toFixed(1):'0.0';
-  document.getElementById('m_pass').textContent = pass;
-  document.getElementById('m_nom').textContent = nom;
-  document.getElementById('m_jarg').textContent = (jInfo.rate*100).toFixed(1)+'‰';
-  setBar('b_asl', avg/40); setBar('b_pass', Math.min(pass/10,1));
-  setBar('b_nom', Math.min(nom/30,1)); setBar('b_jarg', Math.min(jInfo.rate*8,1));
-
-  const tips=[];
-  if(avg>25) tips.push('<span class="warn">Long average sentences.</span> Aim 15–25 words.');
-  if(pass>0) tips.push('<span class="warn">Passive voice flags.</span> Consider actor-first.');
-  if(nom>10) tips.push('<span class="bad">High nominalization load.</span> Use verbs.');
-  if(jInfo.rate>0.01) tips.push('<span class="warn">Jargon density.</span> Swap plain terms.');
-
   document.getElementById('clarityReport').innerHTML =
-    `<div class="small"><strong>Clarity scan</strong> • Sources: Garner; Gopen & Swan</div>
-     <div style="margin-top:6px">${tips.join(' ')||'Looks clear.'}</div>`;
+    `<div class="small"><strong>Clarity scan</strong> • Titles: Garner; Gopen & Swan</div>
+     <div class="metrics" style="margin-top:6px">
+        <div class="kpi"><h4>Avg sentence length</h4><div class="big">${lengths.length? avg.toFixed(1):'0.0'}</div><div class="bar"><i id="b_asl" style="width:${Math.min(avg/40,1)*100}%"></i></div></div>
+        <div class="kpi"><h4>Passive flags</h4><div class="big">${pass}</div><div class="bar"><i id="b_pass" style="width:${Math.min(pass/10,1)*100}%"></i></div></div>
+        <div class="kpi"><h4>Jargon density</h4><div class="big">${(jInfo.rate*100).toFixed(1)}‰</div><div class="bar"><i id="b_jarg" style="width:${Math.min(jInfo.rate*8,1)*100}%"></i></div></div>
+     </div>
+     <div class="hint" style="margin-top:6px">Passive sentences and jargon are highlighted in the Preview.</div>`;
 });
 
 /* ------------------------------ Structure --------------------------------- */
@@ -828,35 +786,7 @@ document.getElementById('insertOutline').addEventListener('click', ()=>{
     Policy: `Problem:\nPolicy objective:\nTradeoffs:\nRecommendation:\n`
   };
   ed.value = (ed.value? ed.value + "\n\n" : "") + blocks[t];
-});
-
-/* ------------------------------ Audience ---------------------------------- */
-const audNote = document.getElementById('audNote');
-const audTips = document.getElementById('audTips');
-document.getElementById('audTipsToggle').addEventListener('click', ()=>{
-  audTips.style.display = audTips.style.display==='none' ? 'block' : 'none';
-  audTips.innerHTML = `<div class="small"><strong>Audience tips</strong></div>
-  <ul>
-    <li>Court: foreground authority, reduce modifiers, signpost holdings.</li>
-    <li>Legislature: purpose, consequences, and administrative feasibility.</li>
-    <li>Public: short sentences, low jargon, clear stakes and examples.</li>
-    <li>Academic: separate is from ought; show limits and counterarguments.</li>
-  </ul>
-  <div class="small">Titles: Garner; Tiersma.</div>`;
-});
-document.getElementById('rewriteAudience').addEventListener('click', ()=>{
-  const aud = document.getElementById('audience').value;
-  let text = ed.value;
-  if(!text.trim()){audNote.textContent="Add some draft text first."; return;}
-  function shorten(s,max=22){return splitSentences(s).map(x=>{
-    const w=x.trim().split(/\s+/); return w.length<=max? x.trim(): w.slice(0,max).join(' ')+'…';
-  }).join(' ')}
-  function stripAdverbs(s){return s.replace(/\b\w+ly\b/g,'')}
-  if(aud==='court'){ text = stripAdverbs(text); audNote.textContent="Court rewrite applied."; }
-  if(aud==='legislature'){ text = shorten(text,20); audNote.textContent="Legislature rewrite applied."; }
-  if(aud==='public'){ text = shorten(text,16).replace(/[\(\)]/g,''); audNote.textContent="Public rewrite applied."; }
-  if(aud==='academic'){ audNote.textContent="Academic tips shown; retain nuance."; }
-  ed.value = text; saveSession();
+  saveSession();
 });
 
 /* --------------------------- Claim Type + Audit --------------------------- */
@@ -923,7 +853,7 @@ document.getElementById('addHoh').addEventListener('click', ()=>{
 document.getElementById('runCanons').addEventListener('click', ()=>{
   const cl=clause.value.trim(); const term=document.getElementById('targetTerm').value.trim();
   if(!cl||!term){document.getElementById('canonOut').textContent='Add a clause and a target term.';return;}
-  // find context snippet
+  // context snippet
   const idx = cl.toLowerCase().indexOf(term.toLowerCase());
   const snippet = idx>=0? cl.slice(Math.max(0,idx-40), Math.min(cl.length,idx+term.length+40)).replace(/\n/g,' ') : cl;
   const thrust = [
@@ -956,51 +886,30 @@ document.getElementById('runCorpus').addEventListener('click', ()=>{
 });
 
 /* ------------------------------ Register Heatmap -------------------------- */
-function nominalizationRate(text){ return nominalizations(text)/Math.max(1,wordCount(text)); }
-function concreteness(text){ const conc=(text.match(/\b(court|judge|contract|data|price|market|road|child|tree|phone|paper|image)\b/gi)||[]).length;
-  const abst=(text.match(/\b(?:tion|sion|ment|ity|ness)\b/gi)||[]).length; return (conc+1)/(conc+abst+1); }
 function setKPIs(vals){
-  document.getElementById('reg_nom').textContent=(vals.nom*100).toFixed(1)+'‰';
   document.getElementById('reg_len').textContent=vals.asl.toFixed(1);
   document.getElementById('reg_jarg').textContent=(vals.jarg*100).toFixed(1)+'‰';
   document.getElementById('reg_conc').textContent=Math.round(vals.conc*100)+'%';
-  document.getElementById('rb_nom').style.width=Math.min(vals.nom*6,1)*100+'%';
   document.getElementById('rb_len').style.width=Math.min(vals.asl/40,1)*100+'%';
   document.getElementById('rb_jarg').style.width=Math.min(vals.jarg*8,1)*100+'%';
   document.getElementById('rb_conc').style.width=Math.min(vals.conc,1)*100+'%';
 }
+function concreteness(text){
+  const conc=(text.match(/\b(court|judge|contract|data|price|market|road|child|tree|phone|paper|image)\b/gi)||[]).length;
+  const abst=(text.match(/\b(?:tion|sion|ment|ity|ness)\b/gi)||[]).length; return (conc+1)/(conc+abst+1);
+}
 document.getElementById('analyzeRegister').addEventListener('click', ()=>{
   const text=ed.value, sents=splitSentences(text);
-  const vals={ nom:nominalizationRate(text), asl:sents.length? sents.map(wordCount).reduce((a,b)=>a+b,0)/sents.length:0,
+  const vals={ asl:sents.length? sents.map(wordCount).reduce((a,b)=>a+b,0)/sents.length:0,
                jarg:jargonDensity(text).rate, conc:concreteness(text) };
   setKPIs(vals);
   const tips=[];
-  if(vals.nom>0.015) tips.push('Reduce nominalizations.');
   if(vals.asl>26) tips.push('Shorten sentences.');
   if(vals.jarg>0.01) tips.push('Replace legalese with plainer terms.');
   if(vals.conc<0.4) tips.push('Add concrete examples.');
   document.getElementById('regTips').innerHTML =
    `<div class="small"><strong>Register suggestions</strong> • Titles: Garner; Gopen & Swan; Tiersma</div>
     <ul>${(tips.length? tips:['Looks balanced.']).map(t=>`<li>${t}</li>`).join('')}</ul>`;
-});
-document.getElementById('applyPlain').addEventListener('click', ()=>{
-  let t=ed.value;
-  // De-jargon
-  t=t.replace(/\bhereinafter\b/gi,'from now on')
-     .replace(/\binter alia\b/gi,'among others')
-     .replace(/\bnotwithstanding\b/gi,'despite')
-     .replace(/\baforementioned\b/gi,'mentioned above')
-     .replace(/\bpursuant to\b/gi,'under');
-  // De-nominalize some common patterns
-  t=t.replace(/\bconduct an analysis of\b/gi,'analyze')
-     .replace(/\bprovide an explanation\b/gi,'explain')
-     .replace(/\bmake a recommendation\b/gi,'recommend')
-     .replace(/\bperform an assessment\b/gi,'assess');
-  // Shorten very long sentences a bit
-  t = splitSentences(t).map(s=> {
-    const w=s.trim().split(/\s+/); return w.length>32? w.slice(0,28).join(' ')+'…': s;
-  }).join(' ');
-  ed.value=t; saveSession();
 });
 
 /* ------------------------------- Wigmore Lite ----------------------------- */
